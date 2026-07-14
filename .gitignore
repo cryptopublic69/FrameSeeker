@@ -1,0 +1,8 @@
+.venv/
+.hf-cache/
+__pycache__/
+test_images/
+*.pyc
+.ui-pids.json
+.lan-firewall-status.json
+.framefinder-api-key

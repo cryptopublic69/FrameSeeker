@@ -1,0 +1,4580 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FrameFinder local inference",
+    "description": "FrameFinder 本地向量检索服务；/api/v1 为 ImageLib 正式契约。",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/capabilities": {
+      "get": {
+        "summary": "查询 FrameFinder 服务能力",
+        "operationId": "capabilities_api_v1_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapabilitiesResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ]
+      }
+    },
+    "/api/v1/assets/upsert": {
+      "post": {
+        "summary": "新增或更新单个资产",
+        "operationId": "upsert_asset_api_v1_assets_upsert_post",
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upsert_asset_api_v1_assets_upsert_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpsertResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "资产已更新、复用或仅更新元数据",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpsertResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assets/{asset_id}": {
+      "get": {
+        "summary": "查询单个资产索引状态",
+        "operationId": "get_asset_api_v1_assets__asset_id__get",
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Asset Id"
+            }
+          },
+          {
+            "name": "library_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "title": "Library Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetStatusResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "幂等删除单个资产",
+        "operationId": "delete_asset_api_v1_assets__asset_id__delete",
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Asset Id"
+            }
+          },
+          {
+            "name": "library_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "title": "Library Id"
+            }
+          },
+          {
+            "name": "client_revision",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "title": "Client Revision"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/assets/status:batch": {
+      "post": {
+        "summary": "批量对账资产索引状态",
+        "operationId": "batch_status_api_v1_assets_status_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchStatusResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ]
+      }
+    },
+    "/api/v1/assets/delete:batch": {
+      "post": {
+        "summary": "批量删除资产",
+        "operationId": "batch_delete_api_v1_assets_delete_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchDeleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchDeleteResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ]
+      }
+    },
+    "/api/v1/assets/{asset_id}/metadata": {
+      "patch": {
+        "summary": "不重新编码地更新资产元数据",
+        "operationId": "patch_metadata_api_v1_assets__asset_id__metadata_patch",
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Asset Id"
+            }
+          },
+          {
+            "name": "library_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "title": "Library Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetadataPatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataPatchResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/text": {
+      "post": {
+        "summary": "在指定资料库中进行全库文字搜索",
+        "operationId": "search_text_api_v1_search_text_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ]
+      }
+    },
+    "/api/v1/search/by-asset": {
+      "post": {
+        "summary": "使用已入库资产进行以图搜图",
+        "operationId": "search_by_asset_api_v1_search_by_asset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssetSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ]
+      }
+    },
+    "/api/v1/libraries/{library_id}/assets/manifest": {
+      "get": {
+        "summary": "分页列出资料库远端资产清单",
+        "operationId": "asset_manifest_api_v1_libraries__library_id__assets_manifest_get",
+        "security": [
+          {
+            "FrameFinderApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "library_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Library Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5000,
+              "minimum": 1,
+              "default": 1000,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManifestResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key 无效",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "拒绝访问",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "资产或路径不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "资产版本或游标状态冲突",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "上传或批次超过限制",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "字段或媒体类型不受支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "推理并发已满",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              },
+              "Retry-After": {
+                "description": "客户端再次尝试前应等待的秒数。",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "未预期服务端错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "模型或向量数据库暂不可用",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "推理超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "summary": "轻量健康检查",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "post": {
+        "summary": "Search",
+        "operationId": "search_api_search_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_search_api_search_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "headers": {
+              "X-Request-Id": {
+                "description": "服务端请求追踪 ID；反馈问题时请提供该值。",
+                "schema": {
+                  "type": "string",
+                  "example": "req-..."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssetLastError": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "retryable": {
+            "type": "boolean",
+            "title": "Retryable"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "retryable"
+        ],
+        "title": "AssetLastError"
+      },
+      "AssetMetadata": {
+        "properties": {
+          "asset_kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "image",
+                  "video_frame"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Asset Kind"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "storage_root_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Storage Root Id"
+          },
+          "virtual_folder_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Virtual Folder Ids"
+          },
+          "tag_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag Ids"
+          },
+          "source_video_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Video Id"
+          },
+          "timestamp_ms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timestamp Ms"
+          },
+          "metadata_updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AssetMetadata"
+      },
+      "AssetSearchRequest": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Library Id"
+          },
+          "asset_id": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Asset Id"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 120
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cursor"
+          },
+          "min_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Score"
+          },
+          "semantic_weight": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Semantic Weight",
+            "default": 0.55
+          },
+          "visual_weight": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Visual Weight",
+            "default": 0.45
+          },
+          "exclude_self": {
+            "type": "boolean",
+            "title": "Exclude Self",
+            "default": true
+          },
+          "filters": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchFilters"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "asset_id"
+        ],
+        "title": "AssetSearchRequest"
+      },
+      "AssetStatusResponse": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "indexed",
+              "model_outdated",
+              "indexing",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "client_revision": {
+            "type": "integer",
+            "title": "Client Revision"
+          },
+          "source_content_hash": {
+            "type": "string",
+            "title": "Source Content Hash"
+          },
+          "indexed_file_hash": {
+            "type": "string",
+            "title": "Indexed File Hash"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "collection_generation": {
+            "type": "string",
+            "title": "Collection Generation"
+          },
+          "indexed_at": {
+            "type": "string",
+            "title": "Indexed At"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AssetLastError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "asset_id",
+          "status",
+          "client_revision",
+          "source_content_hash",
+          "indexed_file_hash",
+          "model_version",
+          "collection_generation",
+          "indexed_at",
+          "request_id"
+        ],
+        "title": "AssetStatusResponse"
+      },
+      "BatchDeleteRequest": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Library Id"
+          },
+          "assets": {
+            "items": {
+              "$ref": "#/components/schemas/DeleteAsset"
+            },
+            "type": "array",
+            "title": "Assets"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "assets"
+        ],
+        "title": "BatchDeleteRequest"
+      },
+      "BatchDeleteResponse": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/BatchDeleteResult"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "count",
+          "results",
+          "request_id"
+        ],
+        "title": "BatchDeleteResponse"
+      },
+      "BatchDeleteResult": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "deleted": {
+            "type": "boolean",
+            "title": "Deleted"
+          },
+          "existed": {
+            "type": "boolean",
+            "title": "Existed"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "deleted",
+          "existed",
+          "error"
+        ],
+        "title": "BatchDeleteResult"
+      },
+      "BatchStatusRequest": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Library Id"
+          },
+          "assets": {
+            "items": {
+              "$ref": "#/components/schemas/StatusAsset"
+            },
+            "type": "array",
+            "title": "Assets"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "assets"
+        ],
+        "title": "BatchStatusRequest"
+      },
+      "BatchStatusResponse": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/BatchStatusResult"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "count",
+          "results",
+          "request_id"
+        ],
+        "title": "BatchStatusResponse"
+      },
+      "BatchStatusResult": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "indexed",
+              "missing",
+              "stale_content",
+              "stale_metadata",
+              "model_outdated",
+              "indexing",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "needs_upsert": {
+            "type": "boolean",
+            "title": "Needs Upsert"
+          },
+          "needs_metadata_patch": {
+            "type": "boolean",
+            "title": "Needs Metadata Patch"
+          },
+          "model_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Version"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AssetLastError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "status",
+          "needs_upsert",
+          "needs_metadata_patch",
+          "model_version"
+        ],
+        "title": "BatchStatusResult"
+      },
+      "Body_search_api_search_post": {
+        "properties": {
+          "files": {
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "type": "array",
+            "title": "Files"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "text"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          },
+          "query_index": {
+            "type": "integer",
+            "title": "Query Index",
+            "default": 0
+          },
+          "semantic_weight": {
+            "type": "number",
+            "title": "Semantic Weight",
+            "default": 0.58
+          },
+          "visual_weight": {
+            "type": "number",
+            "title": "Visual Weight",
+            "default": 0.42
+          }
+        },
+        "type": "object",
+        "required": [
+          "files"
+        ],
+        "title": "Body_search_api_search_post"
+      },
+      "Body_upsert_asset_api_v1_assets_upsert_post": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Library Id"
+          },
+          "asset_id": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Asset Id"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          },
+          "source_content_hash": {
+            "type": "string",
+            "title": "Source Content Hash"
+          },
+          "client_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Client Revision"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video_frame"
+            ],
+            "title": "Media Type"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata",
+            "description": "JSON 编码的 AssetMetadata 对象；正式字段见 components.schemas.AssetMetadata。"
+          },
+          "force": {
+            "type": "boolean",
+            "title": "Force",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "library_id",
+          "asset_id",
+          "file",
+          "source_content_hash",
+          "client_revision",
+          "media_type"
+        ],
+        "title": "Body_upsert_asset_api_v1_assets_upsert_post"
+      },
+      "CapabilitiesResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "api_version": {
+            "type": "string",
+            "title": "Api Version"
+          },
+          "server_instance_id": {
+            "type": "string",
+            "title": "Server Instance Id"
+          },
+          "accepting_requests": {
+            "type": "boolean",
+            "title": "Accepting Requests"
+          },
+          "models_loaded": {
+            "type": "boolean",
+            "title": "Models Loaded"
+          },
+          "device": {
+            "type": "string",
+            "title": "Device"
+          },
+          "models": {
+            "$ref": "#/components/schemas/CapabilityModels"
+          },
+          "collection": {
+            "$ref": "#/components/schemas/CapabilityCollection"
+          },
+          "supported_media_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Supported Media Types"
+          },
+          "accepted_upload_mime_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Accepted Upload Mime Types"
+          },
+          "supported_filters": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Supported Filters"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/CapabilityLimits"
+          },
+          "features": {
+            "$ref": "#/components/schemas/CapabilityFeatures"
+          },
+          "server_time": {
+            "type": "string",
+            "title": "Server Time"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ok",
+          "api_version",
+          "server_instance_id",
+          "accepting_requests",
+          "models_loaded",
+          "device",
+          "models",
+          "collection",
+          "supported_media_types",
+          "accepted_upload_mime_types",
+          "supported_filters",
+          "limits",
+          "features",
+          "server_time",
+          "request_id"
+        ],
+        "title": "CapabilitiesResponse"
+      },
+      "CapabilityCollection": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "generation": {
+            "type": "string",
+            "title": "Generation"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "unavailable"
+            ],
+            "title": "Status"
+          },
+          "stored_assets": {
+            "type": "integer",
+            "title": "Stored Assets"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "generation",
+          "status",
+          "stored_assets"
+        ],
+        "title": "CapabilityCollection"
+      },
+      "CapabilityFeatures": {
+        "properties": {
+          "text_search": {
+            "type": "boolean",
+            "title": "Text Search"
+          },
+          "search_by_asset": {
+            "type": "boolean",
+            "title": "Search By Asset"
+          },
+          "search_by_upload": {
+            "type": "boolean",
+            "title": "Search By Upload"
+          },
+          "metadata_patch": {
+            "type": "boolean",
+            "title": "Metadata Patch"
+          },
+          "metadata_filters": {
+            "type": "boolean",
+            "title": "Metadata Filters"
+          },
+          "async_indexing": {
+            "type": "boolean",
+            "title": "Async Indexing"
+          },
+          "batch_delete": {
+            "type": "boolean",
+            "title": "Batch Delete"
+          },
+          "asset_manifest": {
+            "type": "boolean",
+            "title": "Asset Manifest"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text_search",
+          "search_by_asset",
+          "search_by_upload",
+          "metadata_patch",
+          "metadata_filters",
+          "async_indexing",
+          "batch_delete",
+          "asset_manifest"
+        ],
+        "title": "CapabilityFeatures"
+      },
+      "CapabilityLimits": {
+        "properties": {
+          "max_upload_bytes": {
+            "type": "integer",
+            "title": "Max Upload Bytes"
+          },
+          "max_batch_status_items": {
+            "type": "integer",
+            "title": "Max Batch Status Items"
+          },
+          "default_search_limit": {
+            "type": "integer",
+            "title": "Default Search Limit"
+          },
+          "max_search_limit": {
+            "type": "integer",
+            "title": "Max Search Limit"
+          },
+          "max_query_length": {
+            "type": "integer",
+            "title": "Max Query Length"
+          },
+          "max_concurrent_inference": {
+            "type": "integer",
+            "title": "Max Concurrent Inference"
+          },
+          "search_session_max_results": {
+            "type": "integer",
+            "title": "Search Session Max Results"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "max_upload_bytes",
+          "max_batch_status_items",
+          "default_search_limit",
+          "max_search_limit",
+          "max_query_length",
+          "max_concurrent_inference",
+          "search_session_max_results"
+        ],
+        "title": "CapabilityLimits"
+      },
+      "CapabilityModels": {
+        "properties": {
+          "semantic": {
+            "type": "string",
+            "title": "Semantic"
+          },
+          "visual": {
+            "type": "string",
+            "title": "Visual"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "semantic",
+          "visual",
+          "model_version"
+        ],
+        "title": "CapabilityModels"
+      },
+      "DeleteAsset": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Asset Id"
+          },
+          "client_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Client Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "client_revision"
+        ],
+        "title": "DeleteAsset"
+      },
+      "DeleteResponse": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "deleted": {
+            "type": "boolean",
+            "title": "Deleted"
+          },
+          "existed": {
+            "type": "boolean",
+            "title": "Existed"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "asset_id",
+          "deleted",
+          "existed",
+          "request_id"
+        ],
+        "title": "DeleteResponse"
+      },
+      "ErrorBody": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "INVALID_REQUEST",
+              "INVALID_API_KEY",
+              "ACCESS_DENIED",
+              "API_KEY_NOT_CONFIGURED",
+              "ASSET_NOT_FOUND",
+              "ASSET_NOT_INDEXED",
+              "STALE_CLIENT_REVISION",
+              "CLIENT_REVISION_CONFLICT",
+              "MODEL_VERSION_MISMATCH",
+              "SEARCH_CURSOR_EXPIRED",
+              "MANIFEST_CURSOR_EXPIRED",
+              "UPLOAD_TOO_LARGE",
+              "BATCH_TOO_LARGE",
+              "UNSUPPORTED_MEDIA_TYPE",
+              "UNSUPPORTED_FILTER",
+              "UNSUPPORTED_METADATA_FIELD",
+              "INVALID_METADATA",
+              "INVALID_HASH",
+              "RATE_LIMITED",
+              "MODEL_UNAVAILABLE",
+              "VECTOR_DATABASE_UNAVAILABLE",
+              "INFERENCE_TIMEOUT",
+              "INTERNAL_ERROR",
+              "NOT_FOUND",
+              "HTTP_ERROR",
+              "SERVICE_UNAVAILABLE"
+            ],
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "retryable": {
+            "type": "boolean",
+            "title": "Retryable"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "retryable",
+          "request_id",
+          "details"
+        ],
+        "title": "ErrorBody"
+      },
+      "ErrorEnvelope": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorEnvelope"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthDatabaseStatus": {
+        "properties": {
+          "online": {
+            "type": "boolean",
+            "title": "Online"
+          },
+          "collection": {
+            "type": "string",
+            "title": "Collection"
+          },
+          "stored_points": {
+            "type": "integer",
+            "title": "Stored Points"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "online",
+          "collection",
+          "stored_points"
+        ],
+        "title": "HealthDatabaseStatus"
+      },
+      "HealthResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "loaded": {
+            "type": "boolean",
+            "title": "Loaded",
+            "description": "兼容旧网页客户端；等同于 models_loaded"
+          },
+          "models_loaded": {
+            "type": "boolean",
+            "title": "Models Loaded"
+          },
+          "accepting_requests": {
+            "type": "boolean",
+            "title": "Accepting Requests"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "warming",
+              "ready"
+            ],
+            "title": "Status"
+          },
+          "device": {
+            "type": "string",
+            "title": "Device"
+          },
+          "semantic_model": {
+            "type": "string",
+            "title": "Semantic Model"
+          },
+          "visual_model": {
+            "type": "string",
+            "title": "Visual Model"
+          },
+          "database": {
+            "$ref": "#/components/schemas/HealthDatabaseStatus"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ok",
+          "loaded",
+          "models_loaded",
+          "accepting_requests",
+          "status",
+          "device",
+          "semantic_model",
+          "visual_model",
+          "database"
+        ],
+        "title": "HealthResponse"
+      },
+      "ItemError": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "retryable": {
+            "type": "boolean",
+            "title": "Retryable"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "retryable"
+        ],
+        "title": "ItemError"
+      },
+      "ManifestAsset": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "source_content_hash": {
+            "type": "string",
+            "title": "Source Content Hash"
+          },
+          "client_revision": {
+            "type": "integer",
+            "title": "Client Revision"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "indexed",
+              "model_outdated"
+            ],
+            "title": "Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "source_content_hash",
+          "client_revision",
+          "model_version",
+          "status"
+        ],
+        "title": "ManifestAsset"
+      },
+      "ManifestResponse": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "has_more": {
+            "type": "boolean",
+            "title": "Has More"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "assets": {
+            "items": {
+              "$ref": "#/components/schemas/ManifestAsset"
+            },
+            "type": "array",
+            "title": "Assets"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "has_more",
+          "next_cursor",
+          "assets",
+          "request_id"
+        ],
+        "title": "ManifestResponse"
+      },
+      "MetadataPatchRequest": {
+        "properties": {
+          "client_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Client Revision"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/AssetMetadata"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "client_revision",
+          "metadata"
+        ],
+        "title": "MetadataPatchRequest"
+      },
+      "MetadataPatchResponse": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "metadata_only",
+            "title": "Status"
+          },
+          "client_revision": {
+            "type": "integer",
+            "title": "Client Revision"
+          },
+          "metadata_hash": {
+            "type": "string",
+            "title": "Metadata Hash"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "asset_id",
+          "status",
+          "client_revision",
+          "metadata_hash",
+          "request_id"
+        ],
+        "title": "MetadataPatchResponse"
+      },
+      "SearchFilters": {
+        "properties": {
+          "media_types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "image",
+                    "video_frame"
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Media Types"
+          },
+          "storage_root_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Storage Root Ids"
+          },
+          "virtual_folder_ids_any": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Virtual Folder Ids Any"
+          },
+          "virtual_folder_ids_all": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Virtual Folder Ids All"
+          },
+          "tag_ids_any": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag Ids Any"
+          },
+          "tag_ids_all": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag Ids All"
+          },
+          "source_video_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Video Id"
+          },
+          "exclude_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exclude Asset Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "SearchFilters"
+      },
+      "SearchHit": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "description": "相似度排序分数，不是概率"
+          },
+          "semantic_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semantic Score"
+          },
+          "visual_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Visual Score"
+          },
+          "phash_distance": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phash Distance"
+          },
+          "indexed_source_hash": {
+            "type": "string",
+            "title": "Indexed Source Hash"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "rank",
+          "score",
+          "semantic_score",
+          "visual_score",
+          "phash_distance",
+          "indexed_source_hash"
+        ],
+        "title": "SearchHit"
+      },
+      "SearchResponse": {
+        "properties": {
+          "query_type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image_asset"
+            ],
+            "title": "Query Type"
+          },
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count",
+            "description": "当前页 hits 数量"
+          },
+          "total_count": {
+            "type": "integer",
+            "title": "Total Count",
+            "description": "当前稳定搜索会话中捕获的结果总数"
+          },
+          "results_truncated": {
+            "type": "boolean",
+            "title": "Results Truncated",
+            "description": "结果是否达到服务端 search_session_max_results 上限而被截断"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "has_more": {
+            "type": "boolean",
+            "title": "Has More"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "search_session_id": {
+            "type": "string",
+            "title": "Search Session Id"
+          },
+          "cursor_expires_at": {
+            "type": "string",
+            "title": "Cursor Expires At"
+          },
+          "elapsed_ms": {
+            "type": "integer",
+            "title": "Elapsed Ms"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "collection_generation": {
+            "type": "string",
+            "title": "Collection Generation"
+          },
+          "hits": {
+            "items": {
+              "$ref": "#/components/schemas/SearchHit"
+            },
+            "type": "array",
+            "title": "Hits"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "query_type",
+          "library_id",
+          "count",
+          "total_count",
+          "results_truncated",
+          "limit",
+          "has_more",
+          "next_cursor",
+          "search_session_id",
+          "cursor_expires_at",
+          "elapsed_ms",
+          "model_version",
+          "collection_generation",
+          "hits",
+          "request_id"
+        ],
+        "title": "SearchResponse"
+      },
+      "StatusAsset": {
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Asset Id"
+          },
+          "source_content_hash": {
+            "type": "string",
+            "title": "Source Content Hash"
+          },
+          "client_revision": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Client Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "asset_id",
+          "source_content_hash",
+          "client_revision"
+        ],
+        "title": "StatusAsset"
+      },
+      "TextSearchRequest": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Library Id"
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Query"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 120
+          },
+          "cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cursor"
+          },
+          "min_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Score"
+          },
+          "filters": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchFilters"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "query"
+        ],
+        "title": "TextSearchRequest"
+      },
+      "UpsertResponse": {
+        "properties": {
+          "library_id": {
+            "type": "string",
+            "title": "Library Id"
+          },
+          "asset_id": {
+            "type": "string",
+            "title": "Asset Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "updated",
+              "reused",
+              "metadata_only"
+            ],
+            "title": "Status"
+          },
+          "client_revision": {
+            "type": "integer",
+            "title": "Client Revision"
+          },
+          "source_content_hash": {
+            "type": "string",
+            "title": "Source Content Hash"
+          },
+          "indexed_file_hash": {
+            "type": "string",
+            "title": "Indexed File Hash"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "collection_generation": {
+            "type": "string",
+            "title": "Collection Generation"
+          },
+          "vectors": {
+            "$ref": "#/components/schemas/VectorDimensions"
+          },
+          "phash": {
+            "type": "string",
+            "title": "Phash"
+          },
+          "indexed_at": {
+            "type": "string",
+            "title": "Indexed At"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "library_id",
+          "asset_id",
+          "status",
+          "client_revision",
+          "source_content_hash",
+          "indexed_file_hash",
+          "model_version",
+          "collection_generation",
+          "vectors",
+          "phash",
+          "indexed_at",
+          "request_id"
+        ],
+        "title": "UpsertResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VectorDimensions": {
+        "properties": {
+          "semantic": {
+            "type": "integer",
+            "title": "Semantic"
+          },
+          "visual": {
+            "type": "integer",
+            "title": "Visual"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "semantic",
+          "visual"
+        ],
+        "title": "VectorDimensions"
+      }
+    },
+    "securitySchemes": {
+      "FrameFinderApiKey": {
+        "type": "apiKey",
+        "description": "FrameFinder /api/v1 API Key。必须通过安全配置提供，不得硬编码或记录到日志。",
+        "in": "header",
+        "name": "X-FrameFinder-Key"
+      }
+    }
+  }
+}

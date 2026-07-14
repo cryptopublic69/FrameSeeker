@@ -1,0 +1,14 @@
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.8.0
+torchvision==0.23.0
+transformers==4.56.2
+accelerate==1.10.1
+timm==1.0.20
+pillow==11.3.0
+ImageHash==4.3.2
+numpy==2.2.6
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+python-multipart==0.0.20
+qdrant-client==1.18.0
+hf-xet==1.5.1
