@@ -2,6 +2,12 @@
 
 本文记录 FrameSeeker 的主要功能与接口变更。
 
+## 2026-07-15 — 品牌命名统一
+
+- 将 README 中的产品名称统一由 FrameFinder 更新为 FrameSeeker。
+- 将 Web 工作台的页面标题、顶部品牌和页脚标识统一更新为 FrameSeeker。
+- 保留 `X-FrameFinder-Key`、`FRAMEFINDER_*`、集合名和本地密钥文件名等既有接口标识，确保现有客户端与部署配置继续兼容。
+
 ## 2026-07-15 — 初始版本
 
 ### 多模态检索核心
