@@ -1,4 +1,4 @@
-# FrameFinder 本地检索服务
+# FrameSeeker 本地检索服务
 
 当前组合：
 
@@ -57,7 +57,7 @@ $env:FRAMEFINDER_API_KEY = "<your-private-key>"
 .\start_ui.ps1
 ```
 
-更换密钥后需要重启 FrameFinder。正式局域网部署建议由密码管理工具注入环境变量，
+更换密钥后需要重启 FrameSeeker。正式局域网部署建议由密码管理工具注入环境变量，
 并通过可信反向代理启用 HTTPS。
 
 ## ImageLib 正式接口

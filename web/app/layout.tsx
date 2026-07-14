@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FrameFinder · 本地媒体检索工作台",
+  title: "FrameSeeker · 本地媒体检索工作台",
   description: "使用 SigLIP 2、DINOv3 与 pHash 在本机搜索媒体素材。",
   icons: {
     icon: "/favicon.svg",

@@ -107,7 +107,7 @@ export default function Home() {
   return (
     <main>
       <header className="topbar">
-        <div className="brand"><span className="brandMark">F</span><span>FrameFinder</span><em>LOCAL</em></div>
+        <div className="brand"><span className="brandMark">F</span><span>FrameSeeker</span><em>LOCAL</em></div>
         <div className="runtime">
           <span className={`statusDot ${health?.ok && health.database.online ? "online" : ""}`} />
           {health?.ok
@@ -241,7 +241,7 @@ export default function Home() {
         </section>
       </section>
 
-      <footer><span>FRAMEFINDER / LOCAL VISION LAB</span><span>向量与推理均保存在本机</span></footer>
+      <footer><span>FRAMESEEKER / LOCAL VISION LAB</span><span>向量与推理均保存在本机</span></footer>
     </main>
   );
 }
